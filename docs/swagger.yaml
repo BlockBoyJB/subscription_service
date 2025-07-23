@@ -1,0 +1,261 @@
+basePath: /
+definitions:
+  internal_controller_http_v1.subscriptionInput:
+    properties:
+      end_date:
+        type: string
+      price:
+        type: integer
+      service_name:
+        type: string
+      start_date:
+        type: string
+      user_id:
+        type: string
+    required:
+    - price
+    - service_name
+    - start_date
+    - user_id
+    type: object
+  internal_controller_http_v1.subscriptionPriceOutput:
+    properties:
+      price:
+        type: integer
+    type: object
+  subscription_service_internal_service.SubscriptionInput:
+    properties:
+      endDate:
+        type: string
+      price:
+        type: integer
+      serviceName:
+        type: string
+      startDate:
+        type: string
+      userId:
+        type: string
+    type: object
+  subscription_service_internal_service.SubscriptionOutput:
+    properties:
+      end_date:
+        type: string
+      id:
+        type: integer
+      price:
+        type: integer
+      service_name:
+        type: string
+      start_date:
+        type: string
+      user_id:
+        type: string
+    type: object
+host: localhost:8000
+info:
+  contact: {}
+  description: Subscription service. Includes CRUDL operations + path for price counting
+  title: Subscription Service
+  version: "1.0"
+paths:
+  /api/v1/subscription:
+    post:
+      consumes:
+      - application/json
+      description: Create new subscription in database
+      parameters:
+      - description: input
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/internal_controller_http_v1.subscriptionInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Create
+      tags:
+      - subscription
+  /api/v1/subscription/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete subscription in database by id
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Delete
+      tags:
+      - subscription
+    get:
+      consumes:
+      - application/json
+      description: Find subscription in database by id
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/subscription_service_internal_service.SubscriptionOutput'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Find by id
+      tags:
+      - subscription
+    put:
+      consumes:
+      - application/json
+      description: Update subscription in database by id
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: input
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/internal_controller_http_v1.subscriptionInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Update
+      tags:
+      - subscription
+  /api/v1/subscription/all:
+    get:
+      consumes:
+      - application/json
+      description: Find all subscription in database
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/subscription_service_internal_service.SubscriptionInput'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Find All
+      tags:
+      - subscription
+  /api/v1/subscription/price:
+    get:
+      consumes:
+      - application/json
+      description: Find total price for subscriptions for time interval
+      parameters:
+      - description: name of subscription service
+        in: query
+        name: service_name
+        type: string
+      - description: user id
+        in: query
+        name: user_id
+        type: string
+      - description: start of the time interval. Must be in format mm-yyyy
+        in: query
+        name: start
+        required: true
+        type: string
+      - description: end of the time interval. Must be in format mm-yyyy
+        in: query
+        name: end
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_controller_http_v1.subscriptionPriceOutput'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Price
+      tags:
+      - subscription
+swagger: "2.0"
